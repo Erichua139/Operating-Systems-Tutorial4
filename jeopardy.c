@@ -25,23 +25,28 @@ void tokenize(char *input, char **tokens);
 // Displays the game results for each player, their name and final score, ranked from first to last place
 void show_results(player *players, int num_players);
 
-
 int main(int argc, char *argv[])
 {
     // An array of 4 players, may need to be a pointer if you want it set dynamically
     player players[NUM_PLAYERS];
-    
+
     // Input buffer and and commands
-    char buffer[BUFFER_LEN] = { 0 };
+    char buffer[BUFFER_LEN] = {0};
+    char cur_player[BUFFER_LEN] = "";
+    char cur_cat[BUFFER_LEN] = "";
+    int cur_amnt = 0;
+    char ans [BUFFER_LEN] = "";
 
     // Display the game introduction and initialize the questions
+    printf("Welcome to Jeopardy! This game has four players competeing against eachother to answer trivia questions.\n");
+    printf("There are three catorgories and four questions in each. The player with the highest score at the end wins.\n");
     initialize_game();
 
     // Prompt for players names and intialize each player in the array
-     printf("Enter the name of each player\n");
-    for (int x=0; x<NUM_PLAYERS;x++)
+    printf("Enter the name of each player\n");
+    for (int x = 0; x < NUM_PLAYERS; x++)
     {
-        printf("Player %d:",(x+1));
+        printf("Player %d:", (x + 1));
         scanf(" %s", players[x].name);
         players[x].score = 0;
     }
@@ -50,6 +55,38 @@ int main(int argc, char *argv[])
     while (fgets(buffer, BUFFER_LEN, stdin) != NULL)
     {
         // Call functions from the questions and players source files
+        display_categories();
+        // Getting starting player
+        printf("Please enter the next players name.\n (If you do not know decide in a game of rock paper scissors)\n");
+        scanf(" %s", cur_player);
+        // if(player_exists(players,NUM_PLAYERS,cur_player)==true)
+        if (true)
+        {
+            while(1)
+            {
+                printf("Enter the catorgory that you choose:");
+                scanf(" %s", cur_cat);
+                printf("Enter the dollar amount that you choose:");
+                scanf(" %d", &cur_amnt);
+                if (already_answered(cur_cat, cur_amnt) == false)
+                {
+                    break;
+                }
+                else
+                {
+                    printf("Question has been answered / Invalid input\n");
+                }
+            }
+            display_question(cur_cat,cur_amnt);
+            printf("Remeber to answer the question with either \"what is\" or with \"who is\"");
+            scanf(" %s", ans);
+
+
+        }
+        else
+        {
+            printf("Invalid Input\n");
+        }
 
         // Execute the game until all questions are answered
 
