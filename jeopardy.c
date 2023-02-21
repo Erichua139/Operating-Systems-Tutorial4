@@ -37,7 +37,8 @@ int main(int argc, char *argv[])
     int cur_amnt = 0;
     char ans[BUFFER_LEN];
     char *tokens;
-    tokens = (char*) malloc(100 * sizeof(float));
+    tokens = (char *)malloc(100 * sizeof(float));
+    int count = 0;
 
     // Display the game introduction and initialize the questions
     printf("Welcome to Jeopardy! This game has four players competeing against eachother to answer trivia questions.\n");
@@ -56,13 +57,17 @@ int main(int argc, char *argv[])
     // Perform an infinite loop getting command input from users until game ends
     while (fgets(buffer, BUFFER_LEN, stdin) != NULL)
     {
+        if (count == 12)
+        {
+            break;
+        }
         // Call functions from the questions and players source files
         display_categories();
         // Getting starting player
         printf("Please enter the next players name.\n (If you do not know decide in a game of rock paper scissors)\n");
         scanf(" %s", cur_player);
-        //Replace once player.c is finished
-        // if(player_exists(players,NUM_PLAYERS,cur_player)==true)
+        // Replace once player.c is finished
+        //  if(player_exists(players,NUM_PLAYERS,cur_player)==true)
         if (true)
         {
             while (1)
@@ -71,8 +76,8 @@ int main(int argc, char *argv[])
                 scanf(" %s", cur_cat);
                 printf("Enter the dollar amount that you choose:");
                 scanf(" %d", &cur_amnt);
-                //replcae once questions.c is finished
-                // if (already_answered(cur_cat, cur_amnt) == false)
+                // replcae once questions.c is finished
+                //  if (already_answered(cur_cat, cur_amnt) == false)
                 if (true)
                 {
                     break;
@@ -85,9 +90,18 @@ int main(int argc, char *argv[])
             display_question(cur_cat, cur_amnt);
             printf("Remeber to answer the question with either \"what is\" or with \"who is\"\n");
             scanf(" %[^\n]s", ans);
-            //Stuck here. Cannont figure out how to get the token passed back to main.
-            tokenize((char *)ans, &tokens);
-            printf(&tokens);
+            tokenize(ans, &tokens);
+            if (valid_answer(cur_cat, cur_amnt, tokens) == true)
+            {
+                printf("Correct!\n");
+                printf("Player %s gains %d points \n", cur_player, cur_amnt);
+                update_score(players, NUM_PLAYERS, cur_player, cur_amnt);
+            }
+            else
+            {
+                printf("Incorrect!\n The answer was");
+            }
+            count++;
         }
         else
         {
@@ -95,10 +109,10 @@ int main(int argc, char *argv[])
         }
 
         // Execute the game until all questions are answered
-        break;
         // Display the final results and exit
     }
-    free (tokens);
+    printf("Thank you for playing!\n Tallying the scores...");
+    show_results(players, NUM_PLAYERS);
     return EXIT_SUCCESS;
 }
 // Processes the answer from the user containing what is or who is and tokenizes it to retrieve the answer.
@@ -106,13 +120,34 @@ void tokenize(char *input, char **tokens)
 {
     char *str;
 
-    if((str = strtok(input, "")) != NULL)
-        if(strcmp(str, "who") != 0 && strcmp(str, "what") != 0 )
+    if ((str = strtok(input, " ")) != NULL)
+        if (strcmp(str, "who") != 0 && strcmp(str, "what") != 0)
             return;
 
-    if((str = strtok(NULL, "")) != NULL)
-        if(strcmp(str, "is") != 0)
+    if ((str = strtok(NULL, " ")) != NULL)
+        if (strcmp(str, "is") != 0)
             return;
 
-    *tokens = strtok(NULL, "\n");
+    str = strtok(NULL, " ");
+    *tokens = str;
+}
+void show_results(player *players, int num_players)
+{
+    int winner;
+    int high_score = -1;
+    for (int i = 0; i < num_players; i++)
+    {
+        if (players[i].score > high_score)
+        {
+            high_score = players[i].score;
+            winner = i;
+        }
+    }
+
+    printf("Scores: \n");
+    for (int i = 0; i < num_players; i++)
+    {
+        printf("%*s: %d\n", players[i].name, players[i].score);
+    }
+    printf("The Winner is : %s !", players[winner].name);
 }
