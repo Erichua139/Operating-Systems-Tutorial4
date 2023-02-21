@@ -35,7 +35,9 @@ int main(int argc, char *argv[])
     char cur_player[BUFFER_LEN] = "";
     char cur_cat[BUFFER_LEN] = "";
     int cur_amnt = 0;
-    char ans [BUFFER_LEN] = "";
+    char ans[BUFFER_LEN];
+    char *tokens;
+    tokens = (char*) malloc(100 * sizeof(float));
 
     // Display the game introduction and initialize the questions
     printf("Welcome to Jeopardy! This game has four players competeing against eachother to answer trivia questions.\n");
@@ -59,16 +61,19 @@ int main(int argc, char *argv[])
         // Getting starting player
         printf("Please enter the next players name.\n (If you do not know decide in a game of rock paper scissors)\n");
         scanf(" %s", cur_player);
+        //Replace once player.c is finished
         // if(player_exists(players,NUM_PLAYERS,cur_player)==true)
         if (true)
         {
-            while(1)
+            while (1)
             {
                 printf("Enter the catorgory that you choose:");
                 scanf(" %s", cur_cat);
                 printf("Enter the dollar amount that you choose:");
                 scanf(" %d", &cur_amnt);
-                if (already_answered(cur_cat, cur_amnt) == false)
+                //replcae once questions.c is finished
+                // if (already_answered(cur_cat, cur_amnt) == false)
+                if (true)
                 {
                     break;
                 }
@@ -77,11 +82,12 @@ int main(int argc, char *argv[])
                     printf("Question has been answered / Invalid input\n");
                 }
             }
-            display_question(cur_cat,cur_amnt);
-            printf("Remeber to answer the question with either \"what is\" or with \"who is\"");
-            scanf(" %s", ans);
-
-
+            display_question(cur_cat, cur_amnt);
+            printf("Remeber to answer the question with either \"what is\" or with \"who is\"\n");
+            scanf(" %[^\n]s", ans);
+            //Stuck here. Cannont figure out how to get the token passed back to main.
+            tokenize((char *)ans, &tokens);
+            printf(&tokens);
         }
         else
         {
@@ -89,8 +95,24 @@ int main(int argc, char *argv[])
         }
 
         // Execute the game until all questions are answered
-
+        break;
         // Display the final results and exit
     }
+    free (tokens);
     return EXIT_SUCCESS;
+}
+// Processes the answer from the user containing what is or who is and tokenizes it to retrieve the answer.
+void tokenize(char *input, char **tokens)
+{
+    char *str;
+
+    if((str = strtok(input, "")) != NULL)
+        if(strcmp(str, "who") != 0 && strcmp(str, "what") != 0 )
+            return;
+
+    if((str = strtok(NULL, "")) != NULL)
+        if(strcmp(str, "is") != 0)
+            return;
+
+    *tokens = strtok(NULL, "\n");
 }
