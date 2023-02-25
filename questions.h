@@ -11,17 +11,12 @@
 #include <stdbool.h>
 
 #define MAX_LEN 256
-#define NUM_CATEGORIES 3
+#define NUM_CATEGORIES 4
 // The number of questions, you can use this in your functions in
 // questions.c, this can be accessed in questions.c
-#define NUM_QUESTIONS 12
+#define NUM_QUESTIONS 4
 
-// List of 3 categories as array of strings
-static char categories[NUM_CATEGORIES][MAX_LEN] = {
-    "programming", 
-    "algorithms", 
-    "databases"
-};
+
 
 // Questions struct for each question
 typedef struct {
@@ -34,7 +29,7 @@ typedef struct {
 
 // An array of 12 questions (4 for each category), initialized in initialize_game
 // this may need to be a pointer if you want it set dynamically
-question questions[NUM_QUESTIONS];
+question questions[NUM_CATEGORIES][NUM_QUESTIONS];
 
 // Initializes the array of questions for the game
 extern void initialize_game(void);
